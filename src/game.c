@@ -14,6 +14,8 @@ void game_init(void) {
   int py = 1 + (rand() % (ROWS - 1)), px = 1 + (rand() % (COLS - 1));
   int ey, ex;
 
+  struct Person character_info = {0};
+
   generate_enemy(&ey, &ex);
   do {
     clear();
@@ -21,8 +23,10 @@ void game_init(void) {
     movement_character(movement_button, &py, &px);
     if (check_attack_enemy(py, px, ey, ex)) {
       generate_enemy(&ey, &ex);
+      character_info.shot += 1;
     }
     mvaddch(ey, ex, ENEMY);
+    info_character(character_info);
   } while ((movement_button = getch()) != (int)113);
 
   endwin();  // end ncurses lib and clear struct data
@@ -58,9 +62,7 @@ void movement_character(const int movement_button, int *py, int *px) {
 }
 
 void generate_enemy(int *ey, int *ex) {
-  int temp_ey = *ey, temp_ex = *ex;
-  temp_ey = 1 + (rand() % (ROWS - 1)), temp_ex = 1 + (rand() % (COLS - 1));
-  *ey = temp_ey, *ex = temp_ex;
+  *ey = 1 + (rand() % (ROWS - 1)), *ex = 1 + (rand() % (COLS - 1));
 }
 
 int check_attack_enemy(int py, int px, int ey, int ex) {
@@ -69,6 +71,10 @@ int check_attack_enemy(int py, int px, int ey, int ex) {
     flag = 1;
   }
   return flag;
+}
+
+void info_character(struct Person ci) {
+  mvwprintw(stdscr, ROWS + 2, 0, "Numbers of enemy shot: %d", ci.shot);
 }
 
 void settings_ncurses(void) {

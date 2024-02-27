@@ -1,15 +1,18 @@
 FLAGS := -std=c11 -Wall -Werror -Wextra
 FILE := game
 
+all: clean game 
+
 game: style
-	gcc $(FLAGS) $(FILE).c -o $(FILE).o -lncurses
-	./$(FILE).o
+	gcc $(FLAGS) -o ../$(FILE).exe $(FILE).c -lncurses
+	../$(FILE).exe
 
 clean:
-	rm -rf *.exe *.out *.o
+	rm -rf ../*.exe ../*.out ../*.o
 
-style:
+check_style: clean
 	clang-format -style=Google -i *.c *.h
+	cppcheck --enable=all --suppress=missingIncludeSystem ../src/
 
 install_MacOS:
 	brew install ncurses
