@@ -3,7 +3,7 @@ FILE := game
 
 all: clean game 
 
-game: style
+game: check_style
 	gcc $(FLAGS) -o ../$(FILE).exe $(FILE).c -lncurses
 	../$(FILE).exe
 
