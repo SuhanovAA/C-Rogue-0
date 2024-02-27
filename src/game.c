@@ -8,14 +8,21 @@ int main(void) {
 void game_init(void) {
   initscr();  // init ncurses (lib and struct)
   settings_ncurses();
+  srand(time(NULL));
 
   int movement_button = 0;
-  int py = 5, px = 5;
+  int py = 1 + (rand() % (ROWS - 1)), px = 1 + (rand() % (COLS - 1));
+  int ey, ex;
 
+  generate_enemy(&ey, &ex);
   do {
     clear();
     dungeon_map();
     movement_character(movement_button, &py, &px);
+    if (check_attack_enemy(py, px, ey, ex)) {
+      generate_enemy(&ey, &ex);
+    }
+    mvaddch(ey, ex, ENEMY);
   } while ((movement_button = getch()) != (int)113);
 
   endwin();  // end ncurses lib and clear struct data
@@ -48,6 +55,20 @@ void movement_character(const int movement_button, int *py, int *px) {
   *px = temp_px;
 
   mvaddch(temp_py, temp_px, CHARACTER);
+}
+
+void generate_enemy(int *ey, int *ex) {
+  int temp_ey = *ey, temp_ex = *ex;
+  temp_ey = 1 + (rand() % (ROWS - 1)), temp_ex = 1 + (rand() % (COLS - 1));
+  *ey = temp_ey, *ex = temp_ex;
+}
+
+int check_attack_enemy(int py, int px, int ey, int ex) {
+  int flag = 0;
+  if (py == ey && px == ex) {
+    flag = 1;
+  }
+  return flag;
 }
 
 void settings_ncurses(void) {
