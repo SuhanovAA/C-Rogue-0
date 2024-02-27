@@ -1,8 +1,9 @@
 FLAGS := -std=c11 -Wall -Werror -Wextra
 FILE := game
 
-game:
+game: style
 	gcc $(FLAGS) $(FILE).c -o $(FILE).o -lncurses
+	./$(FILE).o
 
 clean:
 	rm -rf *.exe *.out *.o
